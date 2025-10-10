@@ -1,0 +1,37 @@
+body {
+    background: #3498db;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ensure full height */
+    margin: 0; /* Remove default body margin */
+}
+
+.container {
+    background: #fff; /* White background color */
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px; /* Padding around content */
+    width: auto; /* Automatically resize container */
+    margin-top: 50px; /* Adjust the top margin for spacing */
+}
+
+h1 {
+    text-align: center;
+    font-size: 100px;
+}
+
+.button {
+    background: #3498db; /* Blue button background */
+    color: #fff; /* Text color */
+    border: none; /* Remove button border */
+    border-radius: 5px; /* Round the corners */
+    padding: 10px 20px; /* Padding inside button */
+    margin: 0 3px; /* Add some space between buttons */
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition on hover */
+}
+
+.button:hover {
+    background: #2980b9; /* Darker blue background on hover */
+}
