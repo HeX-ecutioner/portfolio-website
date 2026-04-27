@@ -107,7 +107,9 @@ export const Loading = ({ onComplete }: { onComplete: () => void }) => {
     const initParticles = () => {
       particles = [];
       if (!canvas) return;
-      const numParticles = Math.floor((canvas.width * canvas.height) / 12000);
+      // On mobile, divide by a larger number to reduce particle count, or keep it responsive.
+      const divisor = window.innerWidth < 768 ? 16000 : 12000;
+      const numParticles = Math.floor((canvas.width * canvas.height) / divisor);
       for (let i = 0; i < numParticles; i++) {
         particles.push(new Particle());
       }
@@ -115,18 +117,19 @@ export const Loading = ({ onComplete }: { onComplete: () => void }) => {
 
     const drawLines = () => {
       if (!ctx) return;
+      const maxDistance = window.innerWidth < 768 ? 100 : 180;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 180) {
+          if (distance < maxDistance) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             // Opacity fades out as distance increases
-            ctx.strokeStyle = `rgba(125, 211, 252, ${0.4 * (1 - distance / 180)})`;
+            ctx.strokeStyle = `rgba(125, 211, 252, ${0.4 * (1 - distance / maxDistance)})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
@@ -213,7 +216,7 @@ export const Loading = ({ onComplete }: { onComplete: () => void }) => {
         </motion.div>
 
         <motion.div 
-          className="text-center font-mono tracking-[0.4em]"
+          className="text-center font-mono tracking-[0.2em] md:tracking-[0.4em] px-4 w-full"
           animate={isZooming ? { opacity: 0, scale: 0.9, y: 30 } : { opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
@@ -224,7 +227,7 @@ export const Loading = ({ onComplete }: { onComplete: () => void }) => {
               animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
               exit={{ opacity: 0, filter: 'blur(8px)', scale: 1.05 }}
               transition={{ duration: 0.4 }}
-              className="text-xl md:text-3xl font-bold mb-8 relative text-slate-200 uppercase tracking-[0.3em]"
+              className="text-xs sm:text-sm md:text-xl lg:text-3xl font-bold mb-8 relative text-slate-200 uppercase tracking-[0.1em] sm:tracking-[0.2em] md:tracking-[0.3em] w-full"
             >
               <span className="relative z-10">{texts[textIndex]}</span>
               {/* Subtle glitch shadows */}
@@ -234,7 +237,7 @@ export const Loading = ({ onComplete }: { onComplete: () => void }) => {
           </AnimatePresence>
 
           {/* Glitchy Progress Bar */}
-          <div className="w-80 md:w-96 h-[3px] bg-slate-800 mt-10 relative overflow-hidden mx-auto">
+          <div className="w-[85vw] max-w-[320px] md:max-w-[384px] h-[3px] bg-slate-800 mt-10 relative overflow-hidden mx-auto">
             <motion.div 
               className="absolute top-0 left-0 h-full bg-sky-500 shadow-[0_0_10px_rgba(14,165,233,1)]"
               initial={{ width: 0 }}
