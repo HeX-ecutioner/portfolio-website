@@ -3,9 +3,14 @@ import { useEffect, useState } from 'react'
 import Lenis from 'lenis'
 import { Loading } from './components/Loading'
 import { Hero } from './components/Hero'
+import { SelectPersona } from './components/personas/SelectPersona'
+
+export type Persona = 'professional' | 'gamer' | 'casual' | null;
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true)
+  const [appState, setAppState] = useState<'loading' | 'persona' | 'main'>('loading')
+  const [selectedPersona, setSelectedPersona] = useState<Persona>(null)
+
   useEffect(() => {
     const lenis = new Lenis()
 
@@ -21,11 +26,25 @@ function App() {
 
   return (
     <>
-      <AnimatePresence>
-        {isLoading && <Loading onComplete={() => setIsLoading(false)} />}
+      <AnimatePresence mode="wait">
+        {appState === 'loading' && (
+          <Loading key="loading" onComplete={() => setAppState('persona')} />
+        )}
+        
+        {appState === 'persona' && (
+          <SelectPersona 
+            key="persona" 
+            onSelect={(p) => {
+              setSelectedPersona(p);
+              setAppState('main');
+            }} 
+          />
+        )}
       </AnimatePresence>
 
-      <Hero isLoaded={!isLoading} />
+      {appState === 'main' && (
+        <Hero isLoaded={true} persona={selectedPersona} />
+      )}
     </>
   )
 }
